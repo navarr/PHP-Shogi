@@ -236,6 +236,27 @@
 				$b = abs($x - $tox);
 				if($a/$b != 1) { return false; }
 			}
+			elseif($piece[1] == SHOGI_RYUUMA) // Promoted Bishop
+			{
+				
+			}
+						// Gold General			// Promoted Silver				// Promoted Knight				// Promoted Lance			// Promoted Pawn		
+			elseif($piece[1] == SHOGI_KINSHOU || $piece[1] == SHOGI_NARIGIN || $piece[1] == SHOGI_NARIKEI || $piece[1] == SHOGI_NARIKYOU || $piece[1] == SHOGI_TOKIN)
+			{
+				
+			}
+			elseif($piece[1] == SHOGI_GINSHOU) // Silver General
+			{
+				
+			}
+			elseif($piece[1] == SHOGI_NARIKEI) // Knight
+			{
+				
+			}
+			elseif($piece[1] == SHOGI_KYOUSHA) // Lance
+			{
+				
+			}
 			elseif($piece[1] == SHOGI_FUHYOU) // Pawn
 			{
 				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $tox == $x) { return true; }
