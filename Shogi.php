@@ -240,7 +240,7 @@
 			{
 				
 			}
-						// Gold General			// Promoted Silver				// Promoted Knight				// Promoted Lance			// Promoted Pawn		
+			       // Gold General                // Promoted Silver           // Promoted Knight            // Promoted Lance              // Tokin		
 			elseif($piece[1] == SHOGI_KINSHOU || $piece[1] == SHOGI_NARIGIN || $piece[1] == SHOGI_NARIKEI || $piece[1] == SHOGI_NARIKYOU || $piece[1] == SHOGI_TOKIN)
 			{
 				
