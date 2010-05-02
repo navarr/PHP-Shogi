@@ -228,17 +228,52 @@
 			}
 			elseif($piece[1] == SHOGI_RYUOU) // Promoted Rook
 			{
-				
+				if(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
+				{
+					if($toy > $y)
+					{
+						for($i = $y+1;$i < $toy;$i++)
+						{
+							if($this->board[$tox][$i][0]) { return false; }
+						}
+					}
+					elseif($toy < $y)
+					{
+						for($i = $y-1;$i > $toy;$i++)
+						{
+							if($this->board[$tox][$i][0]) { return false; }
+						}
+					}
+					elseif($tox > $x)
+					{
+						for($i = $x+1;$i < $tox;$i++)
+						{
+							if($this->board[$i][$toy][0]) { return false; }
+						}
+					}
+					elseif($tox < $x)
+					{
+						for($i = $x-1;$i > $tox;$i++)
+						{
+							if($this->board[$i][$toy][0]) { return false; }
+						}
+					}
+					return true;
+				}
+				elseif(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1)) { return true; } // King Moves	
 			}
 			elseif($piece[1] == SHOGI_KAKUGYOU) // Bishop
 			{
 				$a = abs($y - $toy);
 				$b = abs($x - $tox);
-				if($a/$b != 1) { return false; }
+				if($a/$b != 1) { return false; } // |Slope| must be 1
 			}
 			elseif($piece[1] == SHOGI_RYUUMA) // Promoted Bishop
 			{
-				
+				$a = abs($y - $toy);
+				$b = abs($x - $tox);
+				if(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1)) { return true; } // King Moves
+				if($a/$b != 1) { return false; } // |Slope| must be 1
 			}
 			       // Gold General                // Promoted Silver           // Promoted Knight            // Promoted Lance              // Tokin		
 			elseif($piece[1] == SHOGI_KINSHOU || $piece[1] == SHOGI_NARIGIN || $piece[1] == SHOGI_NARIKEI || $piece[1] == SHOGI_NARIKYOU || $piece[1] == SHOGI_TOKIN)
