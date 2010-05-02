@@ -232,7 +232,9 @@
 			}
 			elseif($piece[1] == SHOGI_KAKUGYOU) // Bishop
 			{
-				
+				$a = abs($y - $toy);
+				$b = abs($x - $tox);
+				if($a/$b != 1) { return false; }
 			}
 			elseif($piece[1] == SHOGI_FUHYOU) // Pawn
 			{
