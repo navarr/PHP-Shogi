@@ -3,36 +3,25 @@
 	{
 		public $board = array
 			(
-				0 => array(), // Black Holding
+				0 => array(), // White Holding
 				1 => array
 				(
-					array(SHOGI_BLACK,SHOGI_KYOUSHA),
-					array(SHOGI_BLACK,SHOGI_KEIMA),
-					array(SHOGI_BLACK,SHOGI_GINSHOU),
-					array(SHOGI_BLACK,SHOGI_KINSHOU),
-					array(SHOGI_BLACK,SHOGI_OUSHOU),
-					array(SHOGI_BLACK,SHOGI_KINSHOU),
-					array(SHOGI_BLACK,SHOGI_GINSHOU),
-					array(SHOGI_BLACK,SHOGI_KEIMA),
-					array(SHOGI_BLACK,SHOGI_KYOUSHA)		
+					array(SHOGI_WHITE,SHOGI_KYOUSHA),
+					array(SHOGI_WHITE,SHOGI_KEIMA),
+					array(SHOGI_WHITE,SHOGI_GINSHOU),
+					array(SHOGI_WHITE,SHOGI_KINSHOU),
+					array(SHOGI_WHITE,SHOGI_OUSHOU),
+					array(SHOGI_WHITE,SHOGI_KINSHOU),
+					array(SHOGI_WHITE,SHOGI_GINSHOU),
+					array(SHOGI_WHITE,SHOGI_KEIMA),
+					array(SHOGI_WHITE,SHOGI_KYOUSHA)		
 				),
 				2 => array
 				(
-					1 => array(SHOGI_BLACK,SHOGI_HISHA),
-					7 => array(SHOGI_BLACK,SHOGI_KAKUGYOU)				
+					1 => array(SHOGI_WHITE,SHOGI_HISHA),
+					7 => array(SHOGI_WHITE,SHOGI_KAKUGYOU)				
 				),
 				3 => array
-				(
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU)		
-				),
-				7 => array
 				(
 					array(SHOGI_WHITE,SHOGI_FUHYOU),
 					array(SHOGI_WHITE,SHOGI_FUHYOU),
@@ -43,24 +32,35 @@
 					array(SHOGI_WHITE,SHOGI_FUHYOU),
 					array(SHOGI_WHITE,SHOGI_FUHYOU)		
 				),
+				7 => array
+				(
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU),
+					array(SHOGI_BLACK,SHOGI_FUHYOU)		
+				),
 				8 => array
 				(
-					1 => array(SHOGI_WHITE,SHOGI_KAKUGYOU),
-					7 => array(SHOGI_WHITE,SHOGI_HISHA)	
+					1 => array(SHOGI_BLACK,SHOGI_KAKUGYOU),
+					7 => array(SHOGI_BLACK,SHOGI_HISHA)	
 				),
 				9 => array
 				(
-					array(SHOGI_WHITE,SHOGI_KYOUSHA),
-					array(SHOGI_WHITE,SHOGI_KEIMA),
-					array(SHOGI_WHITE,SHOGI_GINSHOU),
-					array(SHOGI_WHITE,SHOGI_KINSHOU),
-					array(SHOGI_WHITE,SHOGI_OUSHOU),
-					array(SHOGI_WHITE,SHOGI_KINSHOU),
-					array(SHOGI_WHITE,SHOGI_GINSHOU),
-					array(SHOGI_WHITE,SHOGI_KEIMA),
-					array(SHOGI_WHITE,SHOGI_KYOUSHA)
+					array(SHOGI_BLACK,SHOGI_KYOUSHA),
+					array(SHOGI_BLACK,SHOGI_KEIMA),
+					array(SHOGI_BLACK,SHOGI_GINSHOU),
+					array(SHOGI_BLACK,SHOGI_KINSHOU),
+					array(SHOGI_BLACK,SHOGI_OUSHOU),
+					array(SHOGI_BLACK,SHOGI_KINSHOU),
+					array(SHOGI_BLACK,SHOGI_GINSHOU),
+					array(SHOGI_BLACK,SHOGI_KEIMA),
+					array(SHOGI_BLACK,SHOGI_KYOUSHA)
 				),
-				10 => array() // White Holding
+				10 => array() // Black Holding
 			);		
 	}
 	// Definitions (Conventions)
@@ -78,5 +78,5 @@
 	define("SHOGI_NARIKYOU",2048); // +L
 	define("SHOGI_FUHYOU",4096); // p
 	define("SHOGI_TOKIN",8192); // +p
-	define("SHOGI_BLACK",16384);
-	define("SHOGI_WHITE",32768);
+	define("SHOGI_WHITE",16384);
+	define("SHOGI_BLACK",32768);
