@@ -142,12 +142,65 @@
 			$piece = $this->board[$x][$y];
 			if(!isset($piece[0])) { return false; }
 			if($this->board[$tox][$toy][0] == $piece[0]) { return false; }
-			if($piece[1] == SHOGI_FUHYOU)
+			if($toy < 1 || $toy > 9) { return false; }
+			if($tox < 0 || $tox > 8) { return false; }
+			if($piece[1] == SHOGI_OUSHOU)
 			{
-				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $toy > 0 && $toy < 10 && $tox == $x) { return true; }
-				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $toy > 0 && $toy < 10 && $tox == $x) { return true; }
+				if(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1))
+				{
+					return true;
+				}
+			}
+			elseif($piece[1] == SHOGI_HISHA)
+			{
+				if(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
+				{
+					if($toy > $y)
+					{
+						for($i = $y+1;$i < $toy;$i++)
+						{
+							if($this->board[$tox][$i][0]) { return false; }
+						}
+					}
+					elseif($toy < $y)
+					{
+						for($i = $y-1;$i > $toy;$i++)
+						{
+							if($this->board[$tox][$i][0]) { return false; }
+						}
+					}
+					elseif($tox > $x)
+					{
+						for($i = $x+1;$i < $tox;$i++)
+						{
+							if($this->board[$i][$toy][0]) { return false; }
+						}
+					}
+					elseif($tox < $x)
+					{
+						for($i = $x-1;$i > $tox;$i++)
+						{
+							if($this->board[$i][$toy][0]) { return false; }
+						}
+					}
+					return true;
+				}
+			}
+			elseif($piece[1] == SHOGI_RYUOU)
+			{
+				
+			}
+			elseif($piece[1] == SHOGI_KAKUGYOU)
+			{
+				
+			}
+			elseif($piece[1] == SHOGI_FUHYOU)
+			{
+				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $tox == $x) { return true; }
+				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $tox == $x) { return true; }
 				return false;
 			}
+			return false;
 		}
 	}
 	// Definitions (Conventions)
