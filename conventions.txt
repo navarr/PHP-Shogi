@@ -1,0 +1,17 @@
+Conventions:
+
+	Piece Shorthand:
+		K		King			Oushou/Gyokushou
+		R		Rook			Hisha
+		+R		Dragon			Ryuuou
+		B		Bishop			Kakugyou
+		+B		Horse			Ryuuma/Ryuume
+		G		Gold General	Kinshou
+		S		Silver General	Ginshou
+		+S		Promoted Silv.	Narigin
+		N		Knight			Keima
+		+N		Promoted Knight	Narikei
+		L		Lance			Kyousha
+		+L		Promoted Lance	Narikyou
+		p		Pawn			Fuhyou
+		+p		Tokin			tokin
