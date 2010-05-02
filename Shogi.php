@@ -1,6 +1,10 @@
 <?php 
 	class Shogi
 	{
+		/**
+		 * Default Layout
+		 * @var mixed
+		 */
 		public $board = array
 		(
 			0 => array(), // White Holding
@@ -62,7 +66,12 @@
 			),
 			10 => array() // Black Holding
 		);
-
+		/**
+		 * Convert "Human" Coordinates to Machine Coordinates
+		 * @param mixed $var
+		 * @param mixed $var2
+		 * @return mixed
+		 */
 		public function human_to_machine($var,$var2 = null)
 		{
 			$ra = array
@@ -89,8 +98,14 @@
 			if($var2) { return array($ra[$var],$ra[$var2]); }
 			return $ra[$var];
 		}
-		
-		public function add_to_hand($x,$y,$human = false)
+		/**
+		 * Capture a Piece
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function capture_piece($x,$y,$human = false)
 		{
 			if($human)
 			{
@@ -111,7 +126,13 @@
 			$piece = $this->demote_piece($x,$y);
 			$this->remove_piece($x,$y);
 			$this->board[$newy][] = $piece;
+			return true;
 		}
+		/**
+		 * Return the Demoted version of the Piece
+		 * @param piece $piece
+		 * @return piece
+		 */
 		public function demote_piece($piece)
 		{
 			if(!isset($piece[0])) { return false; }
@@ -123,6 +144,13 @@
 			if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
 			return $piece;
 		}
+		/**
+		 * Remove a piece from the board
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return true
+		 */
 		public function remove_piece($x,$y,$human = false)
 		{
 			if($human)
@@ -132,6 +160,15 @@
 			unset($this->board[$y][$x]);
 			return true;
 		}
+		/**
+		 * Can Move from $x,$y to $tox,$toy
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param mixed $tox
+		 * @param mixed $toy
+		 * @param boolean $human
+		 * @return boolean Can Move
+		 */
 		public function can_move($x,$y,$tox,$toy,$human = false)
 		{
 			if($human)
@@ -140,18 +177,21 @@
 				list($tox,$toy) = $this->human_to_machine($tox,$toy);
 			}
 			$piece = $this->board[$x][$y];
-			if(!isset($piece[0])) { return false; }
-			if($this->board[$tox][$toy][0] == $piece[0]) { return false; }
-			if($toy < 1 || $toy > 9) { return false; }
-			if($tox < 0 || $tox > 8) { return false; }
-			if($piece[1] == SHOGI_OUSHOU)
+			
+			// Invalid Movements for all Cases
+			if(!isset($piece[0])) { return false; } // No piece on the board
+			if($this->board[$tox][$toy][0] == $piece[0]) { return false; } // If Same Colour
+			if($toy < 1 || $toy > 9) { return false; } // If out of bounds
+			if($tox < 0 || $tox > 8) { return false; } // ""
+			
+			if($piece[1] == SHOGI_OUSHOU) // King
 			{
 				if(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1))
 				{
 					return true;
 				}
 			}
-			elseif($piece[1] == SHOGI_HISHA)
+			elseif($piece[1] == SHOGI_HISHA) // Rook
 			{
 				if(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
 				{
@@ -186,15 +226,15 @@
 					return true;
 				}
 			}
-			elseif($piece[1] == SHOGI_RYUOU)
+			elseif($piece[1] == SHOGI_RYUOU) // Promoted Rook
 			{
 				
 			}
-			elseif($piece[1] == SHOGI_KAKUGYOU)
+			elseif($piece[1] == SHOGI_KAKUGYOU) // Bishop
 			{
 				
 			}
-			elseif($piece[1] == SHOGI_FUHYOU)
+			elseif($piece[1] == SHOGI_FUHYOU) // Pawn
 			{
 				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $tox == $x) { return true; }
 				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $tox == $x) { return true; }
