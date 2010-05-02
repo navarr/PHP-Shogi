@@ -61,7 +61,34 @@
 					array(SHOGI_BLACK,SHOGI_KYOUSHA)
 				),
 				10 => array() // Black Holding
-			);		
+			);
+
+			public function human_to_machine($var,$var2 = null)
+			{
+				$ra = array
+				(
+					"a" => 1,
+					"b" => 2,
+					"c" => 3,
+					"d" => 4,
+					"e" => 5,
+					"f" => 6,
+					"g" => 7,
+					"h" => 8,
+					"i" => 9,
+					9 => 0,
+					8 => 1,
+					7 => 2,
+					6 => 3,
+					5 => 4,
+					4 => 5,
+					3 => 6,
+					2 => 7,
+					1 => 8
+				);
+				if($var2) { return array($ra[$var],$ra[$var2]); }
+				return $ra[$var];
+			}
 	}
 	// Definitions (Conventions)
 	define("SHOGI_OUSHOU",1); // K

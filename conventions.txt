@@ -15,3 +15,15 @@ Conventions:
 		+L		Promoted Lance	Narikyou
 		p		Pawn			Fuhyou
 		+p		Tokin			tokin
+		
+	Board Layout:
+		$board
+			0 - White Holding
+			1 - a
+				0 = 9
+				1 = 8
+				2 = 7
+				...
+			2 - b
+			...
+			10 - Black Holding
