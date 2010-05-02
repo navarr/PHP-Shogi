@@ -60,7 +60,7 @@
 					array(SHOGI_WHITE,SHOGI_KEIMA),
 					array(SHOGI_WHITE,SHOGI_KYOUSHA)
 				),
-				10 => array()
+				10 => array() // White Holding
 			);		
 	}
 	// Definitions (Conventions)
