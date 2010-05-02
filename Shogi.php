@@ -70,7 +70,16 @@
 		 * Turn - Whose Turn it Is
 		 * @var SHOGI_BLACK or SHOGI_WHITE
 		 */
-		public $turn = SHOGI_BLACK;	
+		public $turn = SHOGI_BLACK;
+		/**
+		 * Log - Log of Movements
+		 * @var array
+		 *      (
+		 *        array(COLOUR, PIECE, FROM_X, FROM_Y, TO_X, TO_Y),
+		 *        ...
+		 *      )
+		 */
+		public $log = array();
 		/**
 		 * Convert "Human" Coordinates to Machine Coordinates
 		 * @param mixed $var
@@ -110,7 +119,7 @@
 		 * @param boolean $human
 		 * @return boolean
 		 */
-		public function capture_piece($x,$y,$human = false)
+		public function capture($x,$y,$human = false)
 		{
 			if($human)
 			{
@@ -204,10 +213,12 @@
 			$piece = $this->board[$y][$x];
 			if($piece[0] != $this->turn) { return false; } // Not our turn.
 			if(!$this->can_move($x,$y,$tox,$toy)) { return false; } // Invalid Move
+			if($this->board[$y][$x][0]) { if(!$this->capture($tox,$toy)) { return false; } }
 			$this->place_piece($piece,$tox,$toy);
 			$this->remove_piece($x,$y);
 			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
-			else { $this->turn = SHOGI_WHITE; } // Switch the Turn
+			else { $this->turn = SHOGI_WHITE; } // Switch the Turncxv 
+			$this->log[] = array($piece[0],$piece[1],$x,$y,$tox,$toy);
 			return true;
 		}
 		/**
