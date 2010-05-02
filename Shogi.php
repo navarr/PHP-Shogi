@@ -112,13 +112,8 @@
 			$this->remove_piece($x,$y);
 			$this->board[$newy][] = $piece;
 		}
-		public function demote_piece($x,$y,$human = false)
+		public function demote_piece($piece)
 		{
-			if($human)
-			{
-				list($x,$y) = $this->human_to_machine($x,$y);
-			}
-			$piece = $this->board[$y][$x];
 			if(!isset($piece[0])) { return false; }
 			if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
 			if($piece[1] == SHOGI_NARIKYOU) { $piece[1] = SHOGI_KYOUSHA; }
@@ -126,7 +121,6 @@
 			if($piece[1] == SHOGI_NARIGIN) { $piece[1] = SHOGI_GINSHOU; }
 			if($piece[1] == SHOGI_RYUUMA) { $piece[1] = SHOGI_KAKUGYOU; }
 			if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
-			$this->board[$y][$x] = $piece;
 			return $piece;
 		}
 		public function remove_piece($x,$y,$human = false)
@@ -150,8 +144,9 @@
 			if($this->board[$tox][$toy][0] == $piece[0]) { return false; }
 			if($piece[1] == SHOGI_FUHYOU)
 			{
-				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $toy > 0 && $toy < 10) { return true; }
-				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $toy > 0 && $toy < 10) { return true; }
+				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $toy > 0 && $toy < 10 && $tox == $x) { return true; }
+				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $toy > 0 && $toy < 10 && $tox == $x) { return true; }
+				return false;
 			}
 		}
 	}
