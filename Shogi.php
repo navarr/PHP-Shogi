@@ -67,6 +67,11 @@
 			10 => array() // Black Holding
 		);
 		/**
+		 * Turn - Whose Turn it Is
+		 * @var SHOGI_BLACK or SHOGI_WHITE
+		 */
+		public $turn = SHOGI_BLACK;	
+		/**
 		 * Convert "Human" Coordinates to Machine Coordinates
 		 * @param mixed $var
 		 * @param mixed $var2
@@ -158,6 +163,51 @@
 				list($x,$y) = $this->human_to_machine($x,$y);
 			}
 			unset($this->board[$y][$x]);
+			return true;
+		}
+		/**
+		 * Place a Piece on a Specific Slot
+		 * @param piece $piece
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function place_piece($piece,$x,$y,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
+			if($piece[0] && $piece[1]) // Has to be valid data.
+			{
+				$this->board[$y][$x] = $piece;
+				return true;
+			} else { return false; }
+		}
+		/**
+		 * Move a piece following Shogi Rules
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param mixed $tox
+		 * @param mixed $toy
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function move($x,$y,$tox,$toy,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+				list($tox,$toy) = $this->human_to_machine($tox,$toy);
+			}
+			$piece = $this->board[$y][$x];
+			if($piece[0] != $this->turn) { return false; } // Not our turn.
+			if(!$this->can_move($x,$y,$tox,$toy)) { return false; } // Invalid Move
+			$this->place_piece($piece,$tox,$toy);
+			$this->remove_piece($x,$y);
+			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
+			else { $this->turn = SHOGI_WHITE; } // Switch the Turn
 			return true;
 		}
 		/**
