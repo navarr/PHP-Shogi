@@ -90,8 +90,12 @@
 			return $ra[$var];
 		}
 		
-		public function add_to_hand($x,$y)
+		public function add_to_hand($x,$y,$human = false)
 		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
 			$piece = $this->board[$y][$x];
 			if(!isset($piece[0])) { return false; }
 			if($piece[0] == SHOGI_BLACK)
@@ -108,8 +112,12 @@
 			$this->remove_piece($x,$y);
 			$this->board[$newy][] = $piece;
 		}
-		public function demote_piece($x,$y)
+		public function demote_piece($x,$y,$human = false)
 		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
 			$piece = $this->board[$y][$x];
 			if(!isset($piece[0])) { return false; }
 			if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
@@ -121,10 +129,30 @@
 			$this->board[$y][$x] = $piece;
 			return $piece;
 		}
-		public function remove_piece($x,$y)
+		public function remove_piece($x,$y,$human = false)
 		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
 			unset($this->board[$y][$x]);
 			return true;
+		}
+		public function can_move($x,$y,$tox,$toy,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+				list($tox,$toy) = $this->human_to_machine($tox,$toy);
+			}
+			$piece = $this->board[$x][$y];
+			if(!isset($piece[0])) { return false; }
+			if($this->board[$tox][$toy][0] == $piece[0]) { return false; }
+			if($piece[1] == SHOGI_FUHYOU)
+			{
+				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $toy > 0 && $toy < 10) { return true; }
+				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $toy > 0 && $toy < 10) { return true; }
+			}
 		}
 	}
 	// Definitions (Conventions)
