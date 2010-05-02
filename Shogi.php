@@ -2,130 +2,130 @@
 	class Shogi
 	{
 		public $board = array
+		(
+			0 => array(), // White Holding
+			1 => array
 			(
-				0 => array(), // White Holding
-				1 => array
-				(
-					array(SHOGI_WHITE,SHOGI_KYOUSHA),
-					array(SHOGI_WHITE,SHOGI_KEIMA),
-					array(SHOGI_WHITE,SHOGI_GINSHOU),
-					array(SHOGI_WHITE,SHOGI_KINSHOU),
-					array(SHOGI_WHITE,SHOGI_OUSHOU),
-					array(SHOGI_WHITE,SHOGI_KINSHOU),
-					array(SHOGI_WHITE,SHOGI_GINSHOU),
-					array(SHOGI_WHITE,SHOGI_KEIMA),
-					array(SHOGI_WHITE,SHOGI_KYOUSHA)		
-				),
-				2 => array
-				(
-					1 => array(SHOGI_WHITE,SHOGI_HISHA),
-					7 => array(SHOGI_WHITE,SHOGI_KAKUGYOU)				
-				),
-				3 => array
-				(
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU),
-					array(SHOGI_WHITE,SHOGI_FUHYOU)		
-				),
-				7 => array
-				(
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU),
-					array(SHOGI_BLACK,SHOGI_FUHYOU)		
-				),
-				8 => array
-				(
-					1 => array(SHOGI_BLACK,SHOGI_KAKUGYOU),
-					7 => array(SHOGI_BLACK,SHOGI_HISHA)	
-				),
-				9 => array
-				(
-					array(SHOGI_BLACK,SHOGI_KYOUSHA),
-					array(SHOGI_BLACK,SHOGI_KEIMA),
-					array(SHOGI_BLACK,SHOGI_GINSHOU),
-					array(SHOGI_BLACK,SHOGI_KINSHOU),
-					array(SHOGI_BLACK,SHOGI_OUSHOU),
-					array(SHOGI_BLACK,SHOGI_KINSHOU),
-					array(SHOGI_BLACK,SHOGI_GINSHOU),
-					array(SHOGI_BLACK,SHOGI_KEIMA),
-					array(SHOGI_BLACK,SHOGI_KYOUSHA)
-				),
-				10 => array() // Black Holding
-			);
+				array(SHOGI_WHITE,SHOGI_KYOUSHA),
+				array(SHOGI_WHITE,SHOGI_KEIMA),
+				array(SHOGI_WHITE,SHOGI_GINSHOU),
+				array(SHOGI_WHITE,SHOGI_KINSHOU),
+				array(SHOGI_WHITE,SHOGI_OUSHOU),
+				array(SHOGI_WHITE,SHOGI_KINSHOU),
+				array(SHOGI_WHITE,SHOGI_GINSHOU),
+				array(SHOGI_WHITE,SHOGI_KEIMA),
+				array(SHOGI_WHITE,SHOGI_KYOUSHA)		
+			),
+			2 => array
+			(
+				1 => array(SHOGI_WHITE,SHOGI_HISHA),
+				7 => array(SHOGI_WHITE,SHOGI_KAKUGYOU)				
+			),
+			3 => array
+			(
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU),
+				array(SHOGI_WHITE,SHOGI_FUHYOU)		
+			),
+			7 => array
+			(
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU),
+				array(SHOGI_BLACK,SHOGI_FUHYOU)		
+			),
+			8 => array
+			(
+				1 => array(SHOGI_BLACK,SHOGI_KAKUGYOU),
+				7 => array(SHOGI_BLACK,SHOGI_HISHA)	
+			),
+			9 => array
+			(
+				array(SHOGI_BLACK,SHOGI_KYOUSHA),
+				array(SHOGI_BLACK,SHOGI_KEIMA),
+				array(SHOGI_BLACK,SHOGI_GINSHOU),
+				array(SHOGI_BLACK,SHOGI_KINSHOU),
+				array(SHOGI_BLACK,SHOGI_OUSHOU),
+				array(SHOGI_BLACK,SHOGI_KINSHOU),
+				array(SHOGI_BLACK,SHOGI_GINSHOU),
+				array(SHOGI_BLACK,SHOGI_KEIMA),
+				array(SHOGI_BLACK,SHOGI_KYOUSHA)
+			),
+			10 => array() // Black Holding
+		);
 
-			public function human_to_machine($var,$var2 = null)
+		public function human_to_machine($var,$var2 = null)
+		{
+			$ra = array
+			(
+				"a" => 1,
+				"b" => 2,
+				"c" => 3,
+				"d" => 4,
+				"e" => 5,
+				"f" => 6,
+				"g" => 7,
+				"h" => 8,
+				"i" => 9,
+				9 => 0,
+				8 => 1,
+				7 => 2,
+				6 => 3,
+				5 => 4,
+				4 => 5,
+				3 => 6,
+				2 => 7,
+				1 => 8
+			);
+			if($var2) { return array($ra[$var],$ra[$var2]); }
+			return $ra[$var];
+		}
+		
+		public function add_to_hand($x,$y)
+		{
+			$piece = $this->board[$y][$x];
+			if(!isset($piece[0])) { return false; }
+			if($piece[0] == SHOGI_BLACK)
 			{
-				$ra = array
-				(
-					"a" => 1,
-					"b" => 2,
-					"c" => 3,
-					"d" => 4,
-					"e" => 5,
-					"f" => 6,
-					"g" => 7,
-					"h" => 8,
-					"i" => 9,
-					9 => 0,
-					8 => 1,
-					7 => 2,
-					6 => 3,
-					5 => 4,
-					4 => 5,
-					3 => 6,
-					2 => 7,
-					1 => 8
-				);
-				if($var2) { return array($ra[$var],$ra[$var2]); }
-				return $ra[$var];
+				$newy = 0;
+				$piece[0] = SHOGI_WHITE;
 			}
-			
-			public function add_to_hand($x,$y)
+			elseif($piece[0] == SHOGI_WHITE)
 			{
-				$piece = $this->board[$y][$x];
-				if(!isset($piece[0])) { return false; }
-				if($piece[0] == SHOGI_BLACK)
-				{
-					$newy = 0;
-					$piece[0] = SHOGI_WHITE;
-				}
-				elseif($piece[0] == SHOGI_WHITE)
-				{
-					$newy = 10;
-					$piece[0] = SHOGI_BLACK;
-				}
-				$piece = $this->demote_piece($x,$y);
-				$this->remove_piece($x,$y);
-				$this->board[$newy][] = $piece;
+				$newy = 10;
+				$piece[0] = SHOGI_BLACK;
 			}
-			public function demote_piece($x,$y)
-			{
-				$piece = $this->board[$y][$x];
-				if(!isset($piece[0])) { return false; }
-				if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
-				if($piece[1] == SHOGI_NARIKYOU) { $piece[1] = SHOGI_KYOUSHA; }
-				if($piece[1] == SHOGI_NARIKEI) { $piece[1] = SHOGI_KEIMA; }
-				if($piece[1] == SHOGI_NARIGIN) { $piece[1] = SHOGI_GINSHOU; }
-				if($piece[1] == SHOGI_RYUUMA) { $piece[1] = SHOGI_KAKUGYOU; }
-				if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
-				$this->board[$y][$x] = $piece;
-				return $piece;
-			}
-			public function remove_piece($x,$y)
-			{
-				unset($this->board[$y][$x]);
-				return true;
-			}
+			$piece = $this->demote_piece($x,$y);
+			$this->remove_piece($x,$y);
+			$this->board[$newy][] = $piece;
+		}
+		public function demote_piece($x,$y)
+		{
+			$piece = $this->board[$y][$x];
+			if(!isset($piece[0])) { return false; }
+			if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
+			if($piece[1] == SHOGI_NARIKYOU) { $piece[1] = SHOGI_KYOUSHA; }
+			if($piece[1] == SHOGI_NARIKEI) { $piece[1] = SHOGI_KEIMA; }
+			if($piece[1] == SHOGI_NARIGIN) { $piece[1] = SHOGI_GINSHOU; }
+			if($piece[1] == SHOGI_RYUUMA) { $piece[1] = SHOGI_KAKUGYOU; }
+			if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
+			$this->board[$y][$x] = $piece;
+			return $piece;
+		}
+		public function remove_piece($x,$y)
+		{
+			unset($this->board[$y][$x]);
+			return true;
+		}
 	}
 	// Definitions (Conventions)
 	define("SHOGI_OUSHOU",1); // K
