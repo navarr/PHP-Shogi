@@ -89,6 +89,43 @@
 				if($var2) { return array($ra[$var],$ra[$var2]); }
 				return $ra[$var];
 			}
+			
+			public function add_to_hand($x,$y)
+			{
+				$piece = $this->board[$y][$x];
+				if(!isset($piece[0])) { return false; }
+				if($piece[0] == SHOGI_BLACK)
+				{
+					$newy = 0;
+					$piece[0] = SHOGI_WHITE;
+				}
+				elseif($piece[0] == SHOGI_WHITE)
+				{
+					$newy = 10;
+					$piece[0] = SHOGI_BLACK;
+				}
+				$piece = $this->demote_piece($x,$y);
+				$this->remove_piece($x,$y);
+				$this->board[$newy][] = $piece;
+			}
+			public function demote_piece($x,$y)
+			{
+				$piece = $this->board[$y][$x];
+				if(!isset($piece[0])) { return false; }
+				if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
+				if($piece[1] == SHOGI_NARIKYOU) { $piece[1] = SHOGI_KYOUSHA; }
+				if($piece[1] == SHOGI_NARIKEI) { $piece[1] = SHOGI_KEIMA; }
+				if($piece[1] == SHOGI_NARIGIN) { $piece[1] = SHOGI_GINSHOU; }
+				if($piece[1] == SHOGI_RYUUMA) { $piece[1] = SHOGI_KAKUGYOU; }
+				if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
+				$this->board[$y][$x] = $piece;
+				return $piece;
+			}
+			public function remove_piece($x,$y)
+			{
+				unset($this->board[$y][$x]);
+				return true;
+			}
 	}
 	// Definitions (Conventions)
 	define("SHOGI_OUSHOU",1); // K
