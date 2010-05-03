@@ -289,7 +289,8 @@
 			}
 			elseif($piece[1] == SHOGI_RYUOU) // Promoted Rook
 			{
-				if(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
+				if(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1)) { return true; } // King Moves
+				elseif(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
 				{
 					if($toy > $y)
 					{
@@ -320,8 +321,7 @@
 						}
 					}
 					return true;
-				}
-				elseif(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1)) { return true; } // King Moves	
+				}	
 			}
 			elseif($piece[1] == SHOGI_KAKUGYOU) // Bishop
 			{
