@@ -81,6 +81,21 @@
 		 */
 		public $log = array();
 		/**
+		 * Fills in Array Blanks in the Board Array.
+		 * @return void
+		 */
+		public function fill_in_board_blanks()
+		{
+			for($a = 1;$a <= 9;$a++)
+			{
+				if(!isset($this->board[$a])) { $this->board[$a] = array(); }
+				for($b = 0;$b <= 8;$b++)
+				{
+					if(!isset($this->board[$a][$b])) { $this->board[$a][$b] = 0; }
+				}
+			}
+		}
+		/**
 		 * Convert "Human" Coordinates to Machine Coordinates
 		 * @param mixed $var
 		 * @param mixed $var2
