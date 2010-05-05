@@ -2,6 +2,41 @@
 	class Shogi
 	{
 		/**
+		 * Debug
+		 * @var boolean
+		 */
+		public $debug = false;
+		/**
+		 * Conventions
+		 * @var mixed
+		 */
+		public $convention = array
+		(
+			SHOGI_OUSHOU => "K",
+			SHOGI_HISHA => "R",
+			SHOGI_RYUOU => "+R",
+			SHOGI_KAKUGYOU => "B",
+			SHOGI_RYUUMA => "+B",
+			SHOGI_KINSHOU => "G",
+			SHOGI_GINSHOU => "S",
+			SHOGI_NARIGIN => "+S",
+			SHOGI_KEIMA => "N",
+			SHOGI_NARIKEI => "+N",
+			SHOGI_KYOUSHA => "L",
+			SHOGI_NARIKYOU => "+L",
+			SHOGI_FUHYOU => "p",
+			SHOGI_TOKIN => "+p"	
+		);
+		/**
+		 * Colors
+		 * @var mixed
+		 */
+		public $colors = array
+		(
+			SHOGI_BLACK => "Black",
+			SHOGI_WHITE => "White"
+		);
+		/**
 		 * Default Layout
 		 * @var mixed
 		 */
@@ -132,6 +167,21 @@
 			return $ra[$var];
 		}
 		/**
+		 * 
+		 * @param unknown_type $x
+		 * @param unknown_type $y
+		 * @param unknown_type $human
+		 * @return unknown_type
+		 */
+		public function get_place($x,$y,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
+			return $this->board[$y][$x];
+		}
+		/**
 		 * Capture a Piece
 		 * @param mixed $x
 		 * @param mixed $y
@@ -146,6 +196,7 @@
 			}
 			$piece = $this->board[$y][$x];
 			if(!isset($piece[0])) { return false; }
+			$piece = $this->demote_piece($piece);
 			if($piece[0] == SHOGI_BLACK)
 			{
 				$newy = 0;
@@ -156,7 +207,6 @@
 				$newy = 10;
 				$piece[0] = SHOGI_BLACK;
 			}
-			$piece = $this->demote_piece($x,$y);
 			$this->remove_piece($x,$y);
 			$this->board[$newy][] = $piece;
 			return true;
@@ -168,13 +218,15 @@
 		 */
 		public function demote_piece($piece)
 		{
-			if(!isset($piece[0])) { return false; }
+			$orig = $piece;
+			if(!isset($piece[1])) { return false; }
 			if($piece[1] == SHOGI_TOKIN) { $piece[1] = SHOGI_FUHYOU; }
 			if($piece[1] == SHOGI_NARIKYOU) { $piece[1] = SHOGI_KYOUSHA; }
 			if($piece[1] == SHOGI_NARIKEI) { $piece[1] = SHOGI_KEIMA; }
 			if($piece[1] == SHOGI_NARIGIN) { $piece[1] = SHOGI_GINSHOU; }
 			if($piece[1] == SHOGI_RYUUMA) { $piece[1] = SHOGI_KAKUGYOU; }
 			if($piece[1] == SHOGI_RYUOU) { $piece[1] = SHOGI_HISHA; }
+			$this->debug("Demoted {$this->convention[$orig[1]]} to {$this->convention[$piece[1]]}");
 			return $piece;
 		}
 		/**
@@ -186,11 +238,12 @@
 		 */
 		public function remove_piece($x,$y,$human = false)
 		{
+			$this->debug("Removing Piece {$x},{$y}");
 			if($human)
 			{
 				list($x,$y) = $this->human_to_machine($x,$y);
 			}
-			unset($this->board[$y][$x]);
+			$this->board[$y][$x] = array();
 			return true;
 		}
 		/**
@@ -230,9 +283,9 @@
 				list($tox,$toy) = $this->human_to_machine($tox,$toy);
 			}
 			$piece = $this->board[$y][$x];
-			if($piece[0] != $this->turn) { return false; } // Not our turn.
-			if(!$this->can_move($x,$y,$tox,$toy)) { return false; } // Invalid Move
-			if($this->board[$y][$x][0]) { if(!$this->capture($tox,$toy)) { return false; } }
+			if($piece[0] != $this->turn) { $this->debug("Not Our Turn");return false; } // Not our turn.
+			if(!$this->can_move($x,$y,$tox,$toy)) { $this->debug("Can't Move");return false; } // Invalid Move
+			if($this->board[$toy][$tox][0]) { if(!$this->capture($tox,$toy)) { $this->debug("Can't Capture Piece");return false; } }
 			$this->place_piece($piece,$tox,$toy);
 			$this->remove_piece($x,$y);
 			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
@@ -256,11 +309,14 @@
 				list($x,$y) = $this->human_to_machine($x,$y);
 				list($tox,$toy) = $this->human_to_machine($tox,$toy);
 			}
-			$piece = $this->board[$x][$y];
+			$piece = $this->board[$y][$x];
+			
+			$this->debug("Can Move from {$x},{$y} to {$tox},{$toy}?");
+			$this->debug("Piece: {$this->colors[$piece[0]]} {$this->convention[$piece[1]]}");
 			
 			// Invalid Movements for all Cases
 			if(!isset($piece[0])) { return false; } // No piece on the board
-			if($this->board[$tox][$toy][0] == $piece[0]) { return false; } // If Same Colour
+			if($this->board[$toy][$tox][0] == $piece[0]) { return false; } // If Same Colour
 			if($toy < 1 || $toy > 9) { return false; } // If out of bounds
 			if($tox < 0 || $tox > 8) { return false; } // ""
 			
@@ -280,28 +336,28 @@
 					{
 						for($i = $y+1;$i < $toy;$i++)
 						{
-							if($this->board[$tox][$i][0]) { return false; }
+							if($this->board[$toy][$i][0]) { return false; }
 						}
 					}
 					elseif($toy < $y)
 					{
 						for($i = $y-1;$i > $toy;$i++)
 						{
-							if($this->board[$tox][$i][0]) { return false; }
+							if($this->board[$toy][$i][0]) { return false; }
 						}
 					}
 					elseif($tox > $x)
 					{
 						for($i = $x+1;$i < $tox;$i++)
 						{
-							if($this->board[$i][$toy][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					elseif($tox < $x)
 					{
 						for($i = $x-1;$i > $tox;$i++)
 						{
-							if($this->board[$i][$toy][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					return true;
@@ -317,28 +373,28 @@
 					{
 						for($i = $y+1;$i < $toy;$i++)
 						{
-							if($this->board[$tox][$i][0]) { return false; }
+							if($this->board[$toy][$i][0]) { return false; }
 						}
 					}
 					elseif($toy < $y)
 					{
 						for($i = $y-1;$i > $toy;$i++)
 						{
-							if($this->board[$tox][$i][0]) { return false; }
+							if($this->board[$toy][$i][0]) { return false; }
 						}
 					}
 					elseif($tox > $x)
 					{
 						for($i = $x+1;$i < $tox;$i++)
 						{
-							if($this->board[$i][$toy][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					elseif($tox < $x)
 					{
 						for($i = $x-1;$i > $tox;$i++)
 						{
-							if($this->board[$i][$toy][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					return true;
@@ -445,31 +501,93 @@
 				}
 				return false;
 			}
-			elseif($piece[1] == SHOGI_NARIKEI) // Knight
+			elseif($piece[1] == SHOGI_KEIMA) // Knight
 			{
-				if($toy == $y-2 && $tox == $x-1) { return true; }
-				elseif($toy == $y-2 && $tox == $x+1) { return true; }
-				return false;
+				if($piece[0] == SHOGI_BLACK)
+				{
+					if($toy == $y-2 && ($tox == $x-1 || $tox == $x+1)) { return true; }
+					return false;
+				}
+				if($piece[0] == SHOGI_WHITE)
+				{
+					if($toy == $y+2 && ($tox == $x-1 || $tox == $x+1)) { return true; }
+					return false;
+				}
 			}
 			elseif($piece[1] == SHOGI_KYOUSHA) // Lance
 			{
-				if($toy < $y && $tox == $x)
+				if($piece[0] == SHOGI_BLACK)
 				{
-					for($i = $y-1;$i < $toy;$i++)
+					if($toy < $y && $tox == $x)
 					{
-						if($this->board[$i][$tox][0]) { return false; }
+						for($i = $y-1;$i < $toy;$i++)
+						{
+							if($this->board[$i][$tox][0]) { return false; }
+						}
+						return true;
 					}
-					return true;
+				}
+				if($piece[0] == SHOGI_WHITE)
+				{
+					if($toy > $y && $tox == $x)
+					{
+						for($i = $y+1;$i > $toy;$i++)
+						{
+							if($this->board[$i][$tox][0]) { return false; }
+						}
+						return true;
+					}
 				}
 				return false;
 			}
 			elseif($piece[1] == SHOGI_FUHYOU) // Pawn
 			{
-				if($piece[0] == SHOGI_BLACK && $toy = $y-1 && $tox == $x) { return true; }
-				if($piece[0] == SHOGI_WHITE && $toy = $y+1 && $tox == $x) { return true; }
-				return false;
+				if($piece[0] == SHOGI_BLACK && $toy == $y-1 && $tox == $x) { return true; }
+				elseif($piece[0] == SHOGI_WHITE && $toy == $y+1 && $tox == $x) { return true; }
+				else { return false; }
 			}
-			return false;
+			else { return false; }
+		}
+		/**
+		 * 
+		 * @return unknown_type
+		 */
+		public function html_table_board($header = false)
+		{
+			$output = "<table>";
+			if($header) { $output .= "<tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>"; }
+			foreach($this->board as $a => $row)
+			{
+				$output.= "<tr>";
+				if($header) { $output .= "<th>{$a}</th>"; }
+				if($a == 0 || $a == 10)
+				{
+					$class = "";
+					if($a == 0) { $class = "white"; }
+					if($a == 10) { $class = "black"; }
+					$output .= "<td colspan=\"9\" class=\"{$class}\">";
+					foreach($row as $b => $field)
+					{
+						$row[$b] = $this->convention[$field[1]];
+					}
+					$output .= implode(", ",$row);
+					$output .= "</td>";
+				}
+				else { foreach($row as $b => $field)
+				{
+					$class = "";
+					if($field[0] == SHOGI_WHITE) { $class = "white"; }
+					if($field[0] == SHOGI_BLACK) { $class = "black"; }
+					$output .= "<td class=\"{$class}\">{$this->convention[$field[1]]}</td>";
+				} }
+				$output.= "</tr>";
+			}
+			$output.= "</table>";
+			return $output;
+		}
+		public function debug($debug)
+		{
+			if($this->debug == true) { print("Debug: {$debug}<br />"); }			
 		}
 	}
 	// Definitions (Conventions)
