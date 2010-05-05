@@ -318,6 +318,7 @@
 			{
 				list($x,$y) = $this->human_to_machine($x,$y);
 			}
+			if($this->board[$y][$x][0]) { $this->debug("Piece on {$x},{$y}");return false; }
 			return true;
 		}
 		/**
