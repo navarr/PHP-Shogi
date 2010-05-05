@@ -251,6 +251,7 @@
 				{
 					return true;
 				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_HISHA) // Rook
 			{
@@ -286,6 +287,7 @@
 					}
 					return true;
 				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_RYUOU) // Promoted Rook
 			{
@@ -321,7 +323,8 @@
 						}
 					}
 					return true;
-				}	
+				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_KAKUGYOU) // Bishop
 			{
@@ -397,19 +400,45 @@
 			       // Gold General                // Promoted Silver           // Promoted Knight            // Promoted Lance              // Tokin		
 			elseif($piece[1] == SHOGI_KINSHOU || $piece[1] == SHOGI_NARIGIN || $piece[1] == SHOGI_NARIKEI || $piece[1] == SHOGI_NARIKYOU || $piece[1] == SHOGI_TOKIN)
 			{
-				
+				if($toy == $y-1 && ($tox = $x+1 || $tox = $x-1 || $tox = $x)) // Row Above
+				{
+					return true;
+				}
+				elseif($toy == $y && ($tox = $x+1 || $tox = $x-1)) // Left or Right
+				{
+					return true;
+				}
+				elseif($toy == $y+1 && $tox = $x)
+				{
+					return true;
+				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_GINSHOU) // Silver General
 			{
-				
+				if($toy == $y-1 && ($tox = $x+1 || $tox = $x-1 || $tox = $x)) // Row Above
+				{
+					return true;
+				}
+				elseif($toy == $y+1 && ($tox == $x-1 || $tox == $x+1))
+				{
+					return true;
+				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_NARIKEI) // Knight
 			{
-				
+				if($toy == $y-2 && $tox == $x-1) { return true; }
+				elseif($toy == $y-2 && $tox == $x+1) { return true; }
+				return false;
 			}
 			elseif($piece[1] == SHOGI_KYOUSHA) // Lance
 			{
-				
+				if($toy < $y)
+				{
+					
+				}
+				return false;
 			}
 			elseif($piece[1] == SHOGI_FUHYOU) // Pawn
 			{
