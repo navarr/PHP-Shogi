@@ -7,6 +7,10 @@
 		 */
 		public $debug = false;
 		/**
+		 * Ignore Turns
+		 */
+		public $ignore_turns = false;
+		/**
 		 * Conventions
 		 * @var mixed
 		 */
@@ -231,6 +235,20 @@
 			$this->debug("Demoted {$this->convention[$orig[1]]} to {$this->convention[$piece[1]]}");
 			return $piece;
 		}
+		
+		public function promote_piece($piece)
+		{
+			$orig = $piece;
+			if(!isset($piece[1])) { return false; }
+			if($piece[1] == SHOGI_FUHYOU) { $piece[1] = SHOGI_TOKIN; }
+			if($piece[1] == SHOGI_KYOUSHA) { $piece[1] = SHOGI_NARIKYOU; }
+			if($piece[1] == SHOGI_KEIMA) { $piece[1] = SHOGI_NARIKEI; }
+			if($piece[1] == SHOGI_GINSHOU) { $piece[1] = SHOGI_NARIGIN; }
+			if($piece[1] == SHOGI_KAKUGYOU) { $piece[1] = SHOGI_RYUUMA; }
+			if($piece[1] == SHOGI_HISHA) { $piece[1] = SHOGI_RYUOU; }
+			$this->debug("Promoted {$this->convention[$orig[1]]} to {$this->convention[$piece[1]]}");
+			return $piece;
+		}
 		/**
 		 * Remove a piece from the board
 		 * @param mixed $x
@@ -277,7 +295,7 @@
 		 * @param boolean $human
 		 * @return boolean
 		 */
-		public function move($x,$y,$tox,$toy,$human = false)
+		public function move($x,$y,$tox,$toy,$human = false,$promote = false)
 		{
 			if($human)
 			{
@@ -285,9 +303,22 @@
 				list($tox,$toy) = $this->human_to_machine($tox,$toy);
 			}
 			$piece = $this->board[$y][$x];
-			if($piece[0] != $this->turn) { $this->debug("Not Our Turn");return false; } // Not our turn.
+			$orig = $piece;
+			if($piece[0] != $this->turn && !$this->ignore_turns) { $this->debug("Not Our Turn");return false; } // Not our turn.
 			if(!$this->can_move($x,$y,$tox,$toy)) { $this->debug("Can't Move");return false; } // Invalid Move
 			if($this->board[$toy][$tox][0]) { if(!$this->capture($tox,$toy)) { $this->debug("Can't Capture Piece");return false; } else { $captured = true; } }
+			if(($piece[0] == SHOGI_WHITE && ($toy == 8 || $toy == 9) || $piece[0] == SHOGI_BLACK && ($toy == 1 || $toy == 2)))
+			{
+				if($promote)
+				{
+					$piece = $this->promote_piece($piece);
+					if($piece[1] != $orig[1]) { $promoted = 1; }
+				}
+				elseif($this->promote_piece($piece) != $piece)
+				{
+					$promoted = 2;
+				}
+			}
 			$this->place_piece($piece,$tox,$toy);
 			$this->remove_piece($x,$y);
 			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
@@ -296,9 +327,12 @@
 			$log_x = $this->machine_to_human($tox,"x");
 			$log_y = $this->machine_to_human($toy,"y");
 			
-			$log = $this->convention[$piece[1]];
+			$log = $this->convention[$orig[1]];
 			if($captured) { $log .= "x"; } else { $log .= "-"; }
-			$log.= $log_y.$log_x;
+			$log.= $log_x.$log_y;
+			
+			if($promoted == 1) { $log .= "+"; }
+			if($promoted == 2) { $log .= "="; }
 			
 			$this->log[] = $log;
 			return true;
@@ -346,28 +380,28 @@
 					{
 						for($i = $y+1;$i < $toy;$i++)
 						{
-							if($this->board[$toy][$i][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					elseif($toy < $y)
 					{
 						for($i = $y-1;$i > $toy;$i++)
 						{
-							if($this->board[$toy][$i][0]) { return false; }
+							if($this->board[$i][$tox][0]) { return false; }
 						}
 					}
 					elseif($tox > $x)
 					{
 						for($i = $x+1;$i < $tox;$i++)
 						{
-							if($this->board[$i][$tox][0]) { return false; }
+							if($this->board[$toy][$i][0]) { return false; }
 						}
 					}
 					elseif($tox < $x)
 					{
 						for($i = $x-1;$i > $tox;$i++)
 						{
-							if($this->board[$i][$tox][0]) { return false; }
+							if($this->board[$toyi][$i][0]) { return false; }
 						}
 					}
 					return true;
@@ -565,7 +599,7 @@
 		public function html_table_board($header = false)
 		{
 			$this->fill_in_board_blanks();
-			$output = "<table>";
+			$output = "<table class='shogi_table shogi_black'>";
 			if($header)
 			{
 				$output .= "<tr><th></th>";
@@ -573,7 +607,7 @@
 				{
 					$output .= "<th><abbr title=\"{$i}\">".$this->machine_to_human($i,"x")."</abbr></th>";
 				}
-				$output .= "</tr>";
+				$output .= "<th></th></tr>";
 			}
 			foreach($this->board as $a => $row)
 			{
@@ -599,7 +633,17 @@
 					if($field[0] == SHOGI_BLACK) { $class = "black"; }
 					$output .= "<td class=\"{$class}\">{$this->convention[$field[1]]}</td>";
 				} }
+				if($header) { $output .= "<th><abbr title=\"{$a}\">".$this->machine_to_human($a,"y")."</abbr></th>"; }
 				$output.= "</tr>";
+			}
+			if($header)
+			{
+				$output .= "<tr><th></th>";
+				for($i = 0;$i < 9;$i++)
+				{
+					$output .= "<th><abbr title=\"{$i}\">".$this->machine_to_human($i,"x")."</abbr></th>";
+				}
+				$output .= "<th></th></tr>";
 			}
 			$output.= "</table>";
 			return $output;
