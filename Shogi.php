@@ -305,6 +305,103 @@
 			if($piece[0] == SHOGI_BLACK && ($y < 4)) { return true; }
 		}
 		/**
+		 * Can Drop a Piece
+		 * @param int $piece_type
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function can_drop($piece_type,$x,$y,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
+			return true;
+		}
+		/**
+		 * Drop a Piece (Will Auto-Detect Turn)
+		 * @param int $piece_type
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function drop($piece_type,$x,$y,$human = false)
+		{
+			$this->debug("Request to Drop {$this->convention[$piece_type]} at {$x},{$y}");
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
+			if($this->turn == SHOGI_WHITE)
+			{
+				$this->debug("White's Turn");
+				if($this->can_drop($piece_type,$x,$y))
+				{
+					foreach($this->board[0] as $i =>$temp_piece)
+					{
+						if($temp_piece[1] == $piece_type)
+						{
+							$this->debug("In Array & Can Drop");
+							$i = array_search($piece_type,$this->board[0]);
+							$piece = $this->board[0][$i];
+							unset($this->board[0][$i]);
+							$this->place_piece($piece,$x,$y);
+							$this->change_turn();
+							
+							$log = $this->convention[$piece_type];
+							$log.= "*";
+							$log.= $this->machine_to_human($x,"x");
+							$log.= $this->machine_to_human($y,"y");
+							$this->log[] = $log;
+							
+							return true;
+						}
+					}
+				}
+			}
+			elseif($this->turn == SHOGI_BLACK)
+			{
+				$this->debug("Black's Turn");
+				if($this->can_drop($piece_type,$x,$y))
+				{
+					foreach($this->board[10] as $i => $temp_piece)
+					{
+						if($temp_piece[1] == $piece_type)
+						{
+							$this->debug("In Array & Can Drop");
+							$i = array_search($piece_type,$this->board[10]);
+							$piece = $this->board[10][$i];
+							unset($this->board[10][$i]);
+							$this->place_piece($piece,$x,$y);
+							$this->change_turn();
+							
+							$log = $this->convention[$piece_type];
+							$log.= "*";
+							$log.= $this->machine_to_human($x,"x");
+							$log.= $this->machine_to_human($y,"y");
+							$this->log[] = $log;
+							
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+		/**
+		 * Change Turn
+		 * @return int Turn
+		 */
+		public function change_turn()
+		{
+			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
+			else { $this->turn = SHOGI_WHITE; }
+			return $this->turn;
+		}
+		/**
 		 * Move a piece following Shogi Rules
 		 * @param mixed $x
 		 * @param mixed $y
@@ -339,8 +436,7 @@
 			}
 			$this->place_piece($piece,$tox,$toy);
 			$this->remove_piece($x,$y);
-			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
-			else { $this->turn = SHOGI_WHITE; } // Switch the Turn
+			$this->change_turn();
 			
 			$log_x = $this->machine_to_human($tox,"x");
 			$log_y = $this->machine_to_human($toy,"y");
