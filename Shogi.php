@@ -372,7 +372,7 @@
 				}
 				return false;
 			}
-			elseif($piece[1] == SHOGI_HISHA) // Rook
+			elseif($piece[1] == SHOGI_HISHA) // Rook y7,y3 6,
 			{
 				if(($toy > $y || $toy < $y) XOR ($tox > $x || $tox < $x))
 				{
@@ -385,7 +385,7 @@
 					}
 					elseif($toy < $y)
 					{
-						for($i = $y-1;$i > $toy;$i++)
+						for($i = $y-1;$i > $toy;$i--)
 						{
 							if($this->board[$i][$tox][0]) { return false; }
 						}
@@ -399,7 +399,7 @@
 					}
 					elseif($tox < $x)
 					{
-						for($i = $x-1;$i > $tox;$i++)
+						for($i = $x-1;$i > $tox;$i--)
 						{
 							if($this->board[$toyi][$i][0]) { return false; }
 						}
