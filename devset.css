@@ -1,0 +1,19 @@
+.shogi_table .shogi_black, .shogi_table .shogi_white { background-repeat: no-repeat; background-position: center center; background-size:auto 100%; }
+.shogi_black .shogi_white,
+.shogi_white .shogi_black { transform:rotate(180deg);-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg); }
+
+.shogi_black.shogi_ou { background-image:url('img/gyokushou.svgz'); }
+.shogi_white.shogi_ou { background-image:url('img/oushou.svgz'); }
+.shogi_hisha { background-image:url('img/hisha.svgz'); }
+.shogi_ryuou { background-image:url('img/ryuuou.svgz'); }
+.shogi_kakugyou { background-image:url('img/kakugyou.svgz'); }
+.shogi_ryuuma { background-image:url('img/ryuuma.svgz'); }
+.shogi_kinshou { background-image:url('img/kinshou.svgz'); }
+.shogi_ginshou { background-image:url('img/ginshou.svgz'); }
+.shogi_narigin { background-image:url('img/narigin.svgz'); }
+.shogi_keima { background-image:url('img/keima.svgz'); }
+.shogi_narikei { background-image:url('img/narikei.svgz'); }
+.shogi_kyousha { background-image:url('img/kyousha.svgz'); }
+.shogi_narikyou { background-image:url('img/narikyou.svgz'); }
+.shogi_fuhyou  { background-image:url('img/fuhyou.svgz'); }
+.shogi_tokin { background-image:url('img/tokin.svgz'); }
