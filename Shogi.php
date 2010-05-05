@@ -345,7 +345,6 @@
 						if($temp_piece[1] == $piece_type)
 						{
 							$this->debug("In Array & Can Drop");
-							$i = array_search($piece_type,$this->board[0]);
 							$piece = $this->board[0][$i];
 							unset($this->board[0][$i]);
 							$this->place_piece($piece,$x,$y);
@@ -372,7 +371,6 @@
 						if($temp_piece[1] == $piece_type)
 						{
 							$this->debug("In Array & Can Drop");
-							$i = array_search($piece_type,$this->board[10]);
 							$piece = $this->board[10][$i];
 							unset($this->board[10][$i]);
 							$this->place_piece($piece,$x,$y);
