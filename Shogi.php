@@ -328,6 +328,35 @@
 				$a = abs($y - $toy);
 				$b = abs($x - $tox);
 				if($a/$b != 1) { return false; } // |Slope| must be 1
+				if($x < $tox && $y < $toy)
+				{
+					for($i = 1;$i < ($x - $tox);$i++)
+					{
+						if($this->board[$y-$i][$x-$i][0]) { return false; }
+					}
+				}
+				elseif($x > $tox && $y < $toy)
+				{
+					for($i = 1;$i < ($x - $tox);$i++)
+					{
+						if($this->board[$y+$i][$x-$i][0]) { return false; }
+					}
+				}
+				elseif($x < $tox && $y > $toy)
+				{
+					for($i = 1;$i < ($y - $toy);$i++)
+					{
+						if($this->board[$y-$i][$x+$i][0]) { return false; }
+					}
+				}
+				elseif($x > $tox && $y > $toy)
+				{
+					for($i = 1;$i < ($y - $toy);$i++)
+					{
+						if($this->board[$y-$i][$x-$i][0]) { return false; }
+					}
+				}
+				return true;
 			}
 			elseif($piece[1] == SHOGI_RYUUMA) // Promoted Bishop
 			{
@@ -335,6 +364,35 @@
 				$b = abs($x - $tox);
 				if(($toy == $y + 1 || $toy == $y - 1) || ($tox == $x + 1 || $tox == $x - 1)) { return true; } // King Moves
 				if($a/$b != 1) { return false; } // |Slope| must be 1
+				if($x < $tox && $y < $toy)
+				{
+					for($i = 1;$i < ($x - $tox);$i++)
+					{
+						if($this->board[$y-$i][$x-$i][0]) { return false; }
+					}
+				}
+				elseif($x > $tox && $y < $toy)
+				{
+					for($i = 1;$i < ($x - $tox);$i++)
+					{
+						if($this->board[$y+$i][$x-$i][0]) { return false; }
+					}
+				}
+				elseif($x < $tox && $y > $toy)
+				{
+					for($i = 1;$i < ($y - $toy);$i++)
+					{
+						if($this->board[$y-$i][$x+$i][0]) { return false; }
+					}
+				}
+				elseif($x > $tox && $y > $toy)
+				{
+					for($i = 1;$i < ($y - $toy);$i++)
+					{
+						if($this->board[$y-$i][$x-$i][0]) { return false; }
+					}
+				}
+				return true;
 			}
 			       // Gold General                // Promoted Silver           // Promoted Knight            // Promoted Lance              // Tokin		
 			elseif($piece[1] == SHOGI_KINSHOU || $piece[1] == SHOGI_NARIGIN || $piece[1] == SHOGI_NARIKEI || $piece[1] == SHOGI_NARIKYOU || $piece[1] == SHOGI_TOKIN)
