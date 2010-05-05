@@ -95,9 +95,9 @@
 				{
 					if(!isset($this->board[$a][$b])) { $this->board[$a][$b] = 0; }
 				}
-				sort($this->board[$a]);
+				ksort($this->board[$a]);
 			}
-			sort($this->board);
+			ksort($this->board);
 		}
 		/**
 		 * Convert "Human" Coordinates to Machine Coordinates
