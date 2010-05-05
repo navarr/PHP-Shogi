@@ -287,6 +287,24 @@
 			} else { return false; }
 		}
 		/**
+		 * Tests if a piece can promote
+		 * @param piece $piece
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return boolean
+		 */
+		public function can_promote($piece,$x,$y,$human = false)
+		{
+			if($human)
+			{
+				list($x,$y) = $this->human_to_machine($x,$y);
+			}
+			if(!$piece[1]) { return false; }
+			if($piece[0] == SHOGI_WHITE && ($y > 6)) { return true; }
+			if($piece[0] == SHOGI_BLACK && ($y < 4)) { return true; }
+		}
+		/**
 		 * Move a piece following Shogi Rules
 		 * @param mixed $x
 		 * @param mixed $y
@@ -307,7 +325,7 @@
 			if($piece[0] != $this->turn && !$this->ignore_turns) { $this->debug("Not Our Turn");return false; } // Not our turn.
 			if(!$this->can_move($x,$y,$tox,$toy)) { $this->debug("Can't Move");return false; } // Invalid Move
 			if($this->board[$toy][$tox][0]) { if(!$this->capture($tox,$toy)) { $this->debug("Can't Capture Piece");return false; } else { $captured = true; } }
-			if(($piece[0] == SHOGI_WHITE && ($toy == 8 || $toy == 9) || $piece[0] == SHOGI_BLACK && ($toy == 1 || $toy == 2)))
+			if($this->can_promote($piece,$tox,$toy))
 			{
 				if($promote)
 				{
