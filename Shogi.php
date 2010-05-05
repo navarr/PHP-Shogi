@@ -93,7 +93,9 @@
 				{
 					if(!isset($this->board[$a][$b])) { $this->board[$a][$b] = 0; }
 				}
+				sort($this->board[$a]);
 			}
+			sort($this->board);
 		}
 		/**
 		 * Convert "Human" Coordinates to Machine Coordinates
