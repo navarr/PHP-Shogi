@@ -109,12 +109,8 @@
 		 */
 		public $turn = SHOGI_BLACK;
 		/**
-		 * Log - Log of Movements
+		 * Log - Log of Movements (by Notation)
 		 * @var array
-		 *      (
-		 *        array(COLOUR, PIECE, FROM_X, FROM_Y, TO_X, TO_Y),
-		 *        ...
-		 *      )
 		 */
 		public $log = array();
 		/**
@@ -166,12 +162,18 @@
 			if($var2) { return array($ra[$var],$ra[$var2]); }
 			return $ra[$var];
 		}
+		public function machine_to_human($var,$var_type)
+		{
+			$ra["x"] = array(0=>9,1=>8,2=>7,3=>6,4=>5,5=>4,6=>3,7=>2,8=>1);
+			$ra["y"] = array(1=>"a",2=>"b",3=>"c",4=>"d",5=>"e",6=>"f",7=>"g",8=>"h",9=>"i");
+			return $ra[$var_type][$var];
+		}
 		/**
-		 * 
-		 * @param unknown_type $x
-		 * @param unknown_type $y
-		 * @param unknown_type $human
-		 * @return unknown_type
+		 * Return whatever is at the coordinates.
+		 * @param mixed $x
+		 * @param mixed $y
+		 * @param boolean $human
+		 * @return mixed
 		 */
 		public function get_place($x,$y,$human = false)
 		{
@@ -285,12 +287,20 @@
 			$piece = $this->board[$y][$x];
 			if($piece[0] != $this->turn) { $this->debug("Not Our Turn");return false; } // Not our turn.
 			if(!$this->can_move($x,$y,$tox,$toy)) { $this->debug("Can't Move");return false; } // Invalid Move
-			if($this->board[$toy][$tox][0]) { if(!$this->capture($tox,$toy)) { $this->debug("Can't Capture Piece");return false; } }
+			if($this->board[$toy][$tox][0]) { if(!$this->capture($tox,$toy)) { $this->debug("Can't Capture Piece");return false; } else { $captured = true; } }
 			$this->place_piece($piece,$tox,$toy);
 			$this->remove_piece($x,$y);
 			if($this->turn == SHOGI_WHITE) { $this->turn = SHOGI_BLACK; }
-			else { $this->turn = SHOGI_WHITE; } // Switch the Turncxv 
-			$this->log[] = array($piece[0],$piece[1],$x,$y,$tox,$toy);
+			else { $this->turn = SHOGI_WHITE; } // Switch the Turn
+			
+			$log_x = $this->machine_to_human($tox,"x");
+			$log_y = $this->machine_to_human($toy,"y");
+			
+			$log = $this->convention[$piece[1]];
+			if($captured) { $log .= "x"; } else { $log .= "-"; }
+			$log.= $log_y.$log_x;
+			
+			$this->log[] = $log;
 			return true;
 		}
 		/**
@@ -549,17 +559,26 @@
 			else { return false; }
 		}
 		/**
-		 * 
-		 * @return unknown_type
+		 * Returns an HTML Table of the Playing Board, including Hands
+		 * @return string
 		 */
 		public function html_table_board($header = false)
 		{
+			$this->fill_in_board_blanks();
 			$output = "<table>";
-			if($header) { $output .= "<tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>"; }
+			if($header)
+			{
+				$output .= "<tr><th></th>";
+				for($i = 0;$i < 9;$i++)
+				{
+					$output .= "<th><abbr title=\"{$i}\">".$this->machine_to_human($i,"x")."</abbr></th>";
+				}
+				$output .= "</tr>";
+			}
 			foreach($this->board as $a => $row)
 			{
 				$output.= "<tr>";
-				if($header) { $output .= "<th>{$a}</th>"; }
+				if($header) { $output .= "<th><abbr title=\"{$a}\">".$this->machine_to_human($a,"y")."</abbr></th>"; }
 				if($a == 0 || $a == 10)
 				{
 					$class = "";
@@ -585,6 +604,11 @@
 			$output.= "</table>";
 			return $output;
 		}
+		/**
+		 * Outputs Data
+		 * @param string $debug
+		 * @return void
+		 */
 		public function debug($debug)
 		{
 			if($this->debug == true) { print("Debug: {$debug}<br />"); }			
