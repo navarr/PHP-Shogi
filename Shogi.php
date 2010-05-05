@@ -434,9 +434,13 @@
 			}
 			elseif($piece[1] == SHOGI_KYOUSHA) // Lance
 			{
-				if($toy < $y)
+				if($toy < $y && $tox == $x)
 				{
-					
+					for($i = $y-1;$i < $toy;$i++)
+					{
+						if($this->board[$i][$tox][0]) { return false; }
+					}
+					return true;
 				}
 				return false;
 			}
